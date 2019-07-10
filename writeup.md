@@ -332,6 +332,53 @@ Man bekommt einen Ordner mit einer README Datei. Darin steht das neue Passwort.
 
 flag = 0ef186ac70e04ea33b4c1853d2526fa2
 
+28 --> 29
+man muss wieder die angegebene git repo clonen. Darin befindet sich eine Datei. Dort ist das Passwort jedoch unkenntlich gemacht.
+Wenn man sich in dem heruntergeladenen Ordner repo befindet, kann man mit `git log -p`  kann man jedoch vorher commitete Versionen der repo sehen. Und dort ist dann auch das Passwort zu sehen.
+
+flag = bbc96594b4e001778eee9975372716b2
+
 
 ---
 Level 29
+
+Wieder eine repo. Dort sieht man kein Passwort. Mit `git log -p` sieht man hier, dass bandit30 in bandit29 geändert wurde? Mit `git branch` sieht man dann in welchen branch man sich befindet. Wir sind im Master. Vielleicht gibt es ja andere branches, in welchem das Passwort schon eingefügt wurde. Mit `git show-branch -- all` sieht man alle branches. 
+
+Dann mit `git remote show` --> origin `git remote show origin` -->  `git checkout dev` in den dev branch wechsel und schon sieht man auch das Passwort.
+
+flag = 5b90576bedb2cc04c86a9e924ce42faf
+
+
+---
+Level 30
+
+Die nächste repo enthält eine Datei. `+just an epmty file... muahaha`
+Mehr bekommt man mit `git show` auch nicht. Dann aber mit `git tag` findet man einen tag `secret`.
+Dann mit `git show secret` findet man dann das Passwort.
+
+flag = 47e603bb428404d265f59c42920d81e5
+
+
+---
+Level 31
+
+Hier muss dann eine Datei `key.txt` erstellt werden mit dem Text `May I come in?`. Diese muss man dann in die master branch pushen.
+Das macht mann dann mit `git add -f key.txt` --> `git commit -m "."` --> `git push` 
+Dann erhält man auch das Passwort.
+
+flag = 56a9bf19c63d650ce78e6ec0354ee45e
+
+
+---
+Level 32
+
+Hier kommt man in eine Shell, die nicht viele Befehle kennt. Mit `$0` wechselt man in die normale bash shell.
+Dann mit `cat /etc/bandit_pass/bandit33` einfach das Passwort abfragen.
+
+flag = c9c3199ddf4121b10cf581a98d51caee
+
+
+---
+Level 33
+
+kein weitere Level bis jetzt.
