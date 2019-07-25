@@ -1,12 +1,12 @@
-#Writeup -- Natas Wargame
+# Writeup -- Natas Wargame
 
-##natas0
+## natas0
 
 pw == natas0
 
 
 ---
-##natas1
+## natas1
 
 Passwort ist auf der Seite versteckt -- Inspect Element
 
@@ -14,7 +14,7 @@ pw == gtVrDuiDfck831PqWsLEZy5gyDz1clto
 
 
 ---
-##natas2
+## natas2
 
 Rechtsklick deaktiviert -- dann eben mit Shortcut (außerdem war bei mir der Rechtsklick nicht mal deaktiviert)
 
@@ -22,7 +22,7 @@ pw == ZluruAthQk7Q2MqmDeTiUij2ZvWy2mBi
 
 
 ---
-##natas3
+## natas3
 
 Nichts auf dieser Seite?? Im Code ist die Referenz auf ein "Bild" ./files/pixel.jpg
 
@@ -36,7 +36,7 @@ pw == sJIJNW6ucpu6HPZ1ZAchaDtwd7oGrD14
 
 
 ---
-##natas4
+## natas4
 
 Wieder nichts?? Nichtmal Google soll es finden?
 
@@ -53,7 +53,7 @@ pw == Z9tkRkWmpt9Qr7XrR5jWRkgOU901swEZ
 
 
 ---
-##natas5
+## natas5
 
 Access disallowed. You are visiting from "" while authorized users should come only from "http://natas5.natas.labs.overthewire.org/" 
 
@@ -65,7 +65,7 @@ pw == iX6IOfmpN7AYOQGPwtn3fXpbaJVJcHfq
 
 
 ---
-##natas6
+## natas6
 
 Wie oben, nur wissen wir nicht, warum wir keinen Zugang haben. Hier geht es um Cookies. Im loggedin Cookie den Wert auf 1 == true setzen. Dann neu laden und fertig.
 
@@ -73,7 +73,7 @@ pwd == aGoY4q2Dc6MgDq4oL4YtoKtyAg9PeHa1
 
 
 ---
-##natas7
+## natas7
 
 So hier bekommen wir ein php Skript und müssen ein secret eingeben.
 
@@ -129,5 +129,5 @@ pwd == 7z3hEENjQtflzgnT29q7wAvMNfZdh0i9
 
 
 ---
-##natas7
+## natas7
 
