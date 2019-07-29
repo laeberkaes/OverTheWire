@@ -129,5 +129,131 @@ pwd == 7z3hEENjQtflzgnT29q7wAvMNfZdh0i9
 
 
 ---
-## natas7
+## natas8
+
+Hier sind zwei Seiten verlinkt. Home und About. Im Quelltext steht dann der Hinweis, dass das Passwort im Verzeichnis `/etc/natas_webpass/natas8` ist.
+
+Wie komme ich jetzt dahin? Wenn wir auf die verschiedenen Links klicken, kann man sehen, wie auf der Seite andere Seiten aufgerufen werden (in der URL). Man sieht nach dem `?` den Aufruf `page=`. Dahinter werden dann die Verzeichnisse aufgerufen, in welchen die Seiten liegen. Dort gibt man dann den oben angegebenen Pfad ein. Schon  bekommt man das Passwort.
+
+pwd == DBfUBfqQG69KvJvJ1iAbMoIpwSNQ9bWe 
+
+
+---
+## natas9
+
+Okay wieder ein `secret` das eingegeben werden muss.
+
+Der Quellcode:
+
+```
+ <html>
+<head>
+<!-- This stuff in the header has nothing to do with the level -->
+<link rel="stylesheet" type="text/css" href="http://natas.labs.overthewire.org/css/level.css">
+<link rel="stylesheet" href="http://natas.labs.overthewire.org/css/jquery-ui.css" />
+<link rel="stylesheet" href="http://natas.labs.overthewire.org/css/wechall.css" />
+<script src="http://natas.labs.overthewire.org/js/jquery-1.9.1.js"></script>
+<script src="http://natas.labs.overthewire.org/js/jquery-ui.js"></script>
+<script src=http://natas.labs.overthewire.org/js/wechall-data.js></script><script src="http://natas.labs.overthewire.org/js/wechall.js"></script>
+<script>var wechallinfo = { "level": "natas8", "pass": "<censored>" };</script></head>
+<body>
+<h1>natas8</h1>
+<div id="content">
+
+<?
+
+$encodedSecret = "3d3d516343746d4d6d6c315669563362";
+
+function encodeSecret($secret) {
+    return bin2hex(strrev(base64_encode($secret)));
+}
+
+if(array_key_exists("submit", $_POST)) {
+    if(encodeSecret($_POST['secret']) == $encodedSecret) {
+    print "Access granted. The password for natas9 is <censored>";
+    } else {
+    print "Wrong secret";
+    }
+}
+?>
+
+<form method=post>
+Input secret: <input name=secret><br>
+<input type=submit name=submit>
+</form>
+
+<div id="viewsource"><a href="index-source.html">View sourcecode</a></div>
+</div>
+</body>
+</html>
+```
+
+Hier geht es darum verschiedene Codierungen zu verschachteln. Einfach ein kurzes Skript schreiben:
+
+```
+import base64
+
+def natas9decoder(secret):
+    var = bytes.fromhex(secret).decode('utf-8')
+    var = str(var)[::-1]
+    var = base64.b64decode(var)
+    print(var)
+
+natas9decoder('3d3d516343746d4d6d6c315669563362')
+```
+
+Man bekommt dann das `secret`:
+
+`oubWYf2kBq`
+
+Das übergibt man dann und schon bekommt man das nächste Passwort.
+
+pwd == W0mMhUcRRnG8dcghE4qvk3JA9lGt8nDl
+
+
+---
+## natas10
+
+Ich denke hier geht es um SQL injection.
+Hier der Quellcode:
+
+```
+ <html>
+<head>
+<!-- This stuff in the header has nothing to do with the level -->
+<link rel="stylesheet" type="text/css" href="http://natas.labs.overthewire.org/css/level.css">
+<link rel="stylesheet" href="http://natas.labs.overthewire.org/css/jquery-ui.css" />
+<link rel="stylesheet" href="http://natas.labs.overthewire.org/css/wechall.css" />
+<script src="http://natas.labs.overthewire.org/js/jquery-1.9.1.js"></script>
+<script src="http://natas.labs.overthewire.org/js/jquery-ui.js"></script>
+<script src=http://natas.labs.overthewire.org/js/wechall-data.js></script><script src="http://natas.labs.overthewire.org/js/wechall.js"></script>
+<script>var wechallinfo = { "level": "natas9", "pass": "<censored>" };</script></head>
+<body>
+<h1>natas9</h1>
+<div id="content">
+<form>
+Find words containing: <input name=needle><input type=submit name=submit value=Search><br><br>
+</form>
+
+
+Output:
+<pre>
+<?
+$key = "";
+
+if(array_key_exists("needle", $_REQUEST)) {
+    $key = $_REQUEST["needle"];
+}
+
+if($key != "") {
+    passthru("grep -i $key dictionary.txt");
+}
+?>
+</pre>
+
+<div id="viewsource"><a href="index-source.html">View sourcecode</a></div>
+</div>
+</body>
+</html>
+```
 
