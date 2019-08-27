@@ -214,23 +214,47 @@ pwd == W0mMhUcRRnG8dcghE4qvk3JA9lGt8nDl
 ---
 ## natas10
 
-Ich denke hier geht es um SQL injection.
 Hier der Quellcode:
 
 ```
- <html>
-<head>
-<!-- This stuff in the header has nothing to do with the level -->
-<link rel="stylesheet" type="text/css" href="http://natas.labs.overthewire.org/css/level.css">
-<link rel="stylesheet" href="http://natas.labs.overthewire.org/css/jquery-ui.css" />
-<link rel="stylesheet" href="http://natas.labs.overthewire.org/css/wechall.css" />
-<script src="http://natas.labs.overthewire.org/js/jquery-1.9.1.js"></script>
-<script src="http://natas.labs.overthewire.org/js/jquery-ui.js"></script>
-<script src=http://natas.labs.overthewire.org/js/wechall-data.js></script><script src="http://natas.labs.overthewire.org/js/wechall.js"></script>
-<script>var wechallinfo = { "level": "natas9", "pass": "<censored>" };</script></head>
-<body>
-<h1>natas9</h1>
-<div id="content">
+Output:
+<pre>
+<?
+$key = "";
+
+if(array_key_exists("needle", $_REQUEST)) {
+    $key = $_REQUEST["needle"];
+}
+
+if($key != "") {
+    passthru("grep -i $key dictionary.txt");
+}
+?>
+</pre>
+
+<div id="viewsource"><a href="index-source.html">View sourcecode</a></div>
+</div>
+</body>
+</html>
+```
+
+Man sieht hier, dass eine Variable eingeführt wird `key`. Diese ist ein leerer String. Das zweite if Statement führt einen Befehl aus, wenn key nicht leer ist, also der Suchtext nicht leer ist --> siehe erstes if.
+
+mit `;` beendet man den Befehl pasthru und kann einen weiteren ausführen. Also bspw. `; ls`. Damit wird eine Datei angezeigt, welche aber nur die Suchwörter anzeigt.
+
+Mit `../` kann man durch die Directories gehen. So sucht man was interessantes.
+Die Interessante Datei liegt in `/etc/natas_webpass/natas10`. Dort ist die flag gespeichert.
+
+pwd == nOpp1igQAkUzaI1GUUjzn1bFVj7xCNzu
+
+
+---
+## natas11
+
+Wieder eine Suche mit Quellcode:
+
+```
+For security reasons, we now filter on certain characters<br/><br/>
 <form>
 Find words containing: <input name=needle><input type=submit name=submit value=Search><br><br>
 </form>
@@ -246,10 +270,97 @@ if(array_key_exists("needle", $_REQUEST)) {
 }
 
 if($key != "") {
-    passthru("grep -i $key dictionary.txt");
+    if(preg_match('/[;|&]/',$key)) {
+        print "Input contains an illegal character!";
+    } else {
+        passthru("grep -i $key dictionary.txt");
+    }
 }
 ?>
 </pre>
+
+<div id="viewsource"><a href="index-source.html">View sourcecode</a></div>
+</div>
+</body>
+</html>
+```
+
+Diesmal gibt es aber ausgeschlossene Zeichen. Ansonsten ist der Code gleich.
+Der Trick hinter diesem Rätsel ist, dass `grep` in meheren Dateien nach dem key suchen kann. Deswegen übergibt man dem Befehl bspw. einen Buchstaben, welcher in den Dateien gesucht werden soll und dann noch die Datei, in der die Flag gespeichert ist. Hier also als Beispiel `a /etc/natas_webpass/natas11`. Das gibt uns jedoch noch nicht die Flag. Logischerweise, weil a nicht in der Flag ist. Man probiert einfach weiter Buchstaben aus. C funktioniert dann.
+
+pwd == U82q5TCMMQ9xuFoI3dYX61s7OZD9JKoK
+
+
+---
+## natas 12
+
+Man kann di Hintergrundfarbe einstellen. Es ist auch wieder Quellcode gegeben.
+
+```
+$defaultdata = array( "showpassword"=>"no", "bgcolor"=>"#ffffff");
+
+function xor_encrypt($in) {
+    $key = '<censored>';
+    $text = $in;
+    $outText = '';
+
+    // Iterate through each character
+    for($i=0;$i<strlen($text);$i++) {
+    $outText .= $text[$i] ^ $key[$i % strlen($key)];
+    }
+
+    return $outText;
+}
+
+function loadData($def) {
+    global $_COOKIE;
+    $mydata = $def;
+    if(array_key_exists("data", $_COOKIE)) {
+    $tempdata = json_decode(xor_encrypt(base64_decode($_COOKIE["data"])), true);
+    if(is_array($tempdata) && array_key_exists("showpassword", $tempdata) && array_key_exists("bgcolor", $tempdata)) {
+        if (preg_match('/^#(?:[a-f\d]{6})$/i', $tempdata['bgcolor'])) {
+        $mydata['showpassword'] = $tempdata['showpassword'];
+        $mydata['bgcolor'] = $tempdata['bgcolor'];
+        }
+    }
+    }
+    return $mydata;
+}
+
+function saveData($d) {
+    setcookie("data", base64_encode(xor_encrypt(json_encode($d))));
+}
+
+$data = loadData($defaultdata);
+
+if(array_key_exists("bgcolor",$_REQUEST)) {
+    if (preg_match('/^#(?:[a-f\d]{6})$/i', $_REQUEST['bgcolor'])) {
+        $data['bgcolor'] = $_REQUEST['bgcolor'];
+    }
+}
+
+saveData($data);
+
+
+
+?>
+
+<h1>natas11</h1>
+<div id="content">
+<body style="background: <?=$data['bgcolor']?>;">
+Cookies are protected with XOR encryption<br/><br/>
+
+<?
+if($data["showpassword"] == "yes") {
+    print "The password for natas12 is <censored><br>";
+}
+
+?>
+
+<form>
+Background color: <input name=bgcolor value="<?=$data['bgcolor']?>">
+<input type=submit value="Set color">
+</form>
 
 <div id="viewsource"><a href="index-source.html">View sourcecode</a></div>
 </div>
